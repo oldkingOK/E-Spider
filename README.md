@@ -26,7 +26,7 @@
 安装依赖
 
 ```shell
-pip install requests
+pip install requests sqlite-worker
 ```
 
 ### 2. 配置参数
