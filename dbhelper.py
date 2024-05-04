@@ -24,7 +24,7 @@ def insert_data(path, name, text):
     worker.execute(query, (path, name, text))
 
 def get_by_id(id: str):
-    sql = f"SELECT Path, Name, Text FROM ebook WHERE Path LIKE '%/{id}.md';"
+    sql = f"SELECT Path, Name, Text FROM ebook WHERE Path LIKE '%/{id}.html';"
     return worker.execute(sql)
 
 if not has_table(): create_table()

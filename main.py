@@ -14,7 +14,7 @@ def replace_illegal_chars(path):
 def fetch_and_write(id, name, path:str):
     """爬和存"""
 
-    path = path + id + ".md"
+    path = path + id + ".html"
     text = getContent(id)
     insert_data(path, name, text)
 
@@ -23,7 +23,7 @@ def main(from_dict: dict):
     print("正在爬取...")
     # 主页
     if len(get_by_id('index')) == 0:
-        insert_data('/index.md', "知识库", getContent(1))
+        insert_data('/index.html', "知识库", getContent(1))
 
     # 原始目录树，用于查找文件
     m = crawl()
