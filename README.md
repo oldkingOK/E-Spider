@@ -1,6 +1,6 @@
 <div align="center">
 
-# E-Spider | 【E知识库】爬虫
+# E-Spider | 【E 知识库】爬虫
 
 </div>
 
@@ -26,9 +26,21 @@
 安装依赖
 
 ```shell
-pip install requests sqlite-worker
+pip install requests sqlite-worker tqdm
 ```
 
 ### 2. 配置参数
 
 编辑 `config.py` 文件
+
+```python
+URL = "https://127.0.0.1/plugin.php" # 目标url
+DB = "./ebook.db" # 数据库存储位置
+DEEP = 9 # 爬取目录深度（3 - 9）
+```
+
+### 3. 运行
+
+```shell
+python main.py
+```

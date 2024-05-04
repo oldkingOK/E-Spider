@@ -1,5 +1,5 @@
 from requests import get
-from config import URL
+from config import URL, DEEP
 import urllib3
 import json
 
@@ -54,7 +54,7 @@ def getContent(id) -> str:
 def crawl() -> dict:
     """爬取所有节点"""
     m = {}
-    for i in range(1, 9):
+    for i in range(1, DEEP):
         m = {**m, **getData(i)}
     return m
 

@@ -1,5 +1,7 @@
 from espider import crawl, getContent
-from dbhelper import insert_data
+from dbhelper import insert_data, get_by_id
+from tqdm import tqdm
+from config import DB
 import threading
 import time, random
 
@@ -9,32 +11,27 @@ def replace_illegal_chars(path):
     for char in illegal_chars: path = path.replace(char, '_')
     return path
 
-
-count = 0
-length = 0
-
 def fetch_and_write(id, name, path:str):
     """爬和存"""
-    global count
 
     path = path + id + ".md"
     text = getContent(id)
     insert_data(path, name, text)
 
-    count += 1
-    print(f"\rDone {count} of {length}")
 
-
-if __name__ == '__main__':
+def main(from_dict: dict):
+    print("正在爬取...")
     # 主页
-    insert_data(f'/index.md', "知识库", getContent(1))
+    if len(get_by_id('index')) == 0:
+        insert_data('/index.md', "知识库", getContent(1))
 
-    # 内容
+    # 原始目录树，用于查找文件
     m = crawl()
-    length = len([data for data in m.values() if data["is_dir"] == "0"])
 
-    for id, data in m.items():
+    for id, data in tqdm(from_dict.items()):
         if data["is_dir"] == "1": continue
+        if from_dict and id not in from_dict:
+            continue
 
         # 获取文件路径
         path = ""
@@ -48,4 +45,18 @@ if __name__ == '__main__':
         time.sleep(random.uniform(0.5, 1)) # 随机睡觉，避免触发反爬机制
         threading.Thread(target=fetch_and_write, args=(id, data["name"], path)).start()
 
-    print("All Done!")
+    print(f"爬取完毕！存放在 {DB}")
+
+def check() -> dict:
+    print("正在获取爬取清单...")
+    m = crawl()
+    missing = {}
+    for id, data in tqdm(m.items()):
+        if data["is_dir"] == "1": continue
+        if len(get_by_id(id)) == 0:
+            missing[id] = data
+    print(f"获取完毕！长度为 {len(missing.keys())}")
+    return missing
+
+if __name__ == '__main__':
+    main(check())
