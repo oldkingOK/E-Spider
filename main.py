@@ -42,10 +42,14 @@ def main(from_dict: dict):
         path = "/" + path
         path = replace_illegal_chars(path) # 去除非法字符
 
-        time.sleep(random.uniform(0.5, 1)) # 随机睡觉，避免触发反爬机制
-        threading.Thread(target=fetch_and_write, args=(id, data["name"], path)).start()
+        try:
+            time.sleep(random.uniform(0.5, 1)) # 随机睡觉，避免触发反爬机制
+            threading.Thread(target=fetch_and_write, args=(id, data["name"], path)).start()
+        except KeyboardInterrupt:
+            print("用户键盘终止")
+            break
 
-    print(f"爬取完毕！存放在 {DB}")
+    print(f"爬取完成！存放在 {DB}")
 
 def check() -> dict:
     print("正在获取爬取清单...")
